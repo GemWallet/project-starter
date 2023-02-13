@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GemWallet Starter Project</title>
+    <!-- In this example we use GemWallet version 2.1.0, feel free to use the last version -->
+    <script src="https://unpkg.com/@gemwallet/api@2.1.0/umd/gemwallet-api.js"></script>
+  </head>
+  <body>
+    <div id="wrapper">
+      <button onclick="handleXRPPayment()">Pay XRP</button>
+      <div>
+        Transaction ID:
+        <strong id="tx-pay-xrp"
+          >Use the Pay XRP button to have a transaction ID</strong
+        >
+      </div>
+      <button onclick="handleUSDPayment()">Pay USD</button>
+      <div>
+        Transaction ID:
+        <strong id="tx-pay-usd"
+          >Use the Pay USD button to have a transaction ID</strong
+        >
+      </div>
+      <button onclick="handleTrustline()">Add trustline</button>
+      <div>
+        Transaction ID:
+        <strong id="tx-trustline"
+          >Use the Add Trustline button to have a transaction ID</strong
+        >
+      </div>
+    </div>
+  </body>
+</html>
+
+<script>
+  // The `handleXRPPayment` function is called when the "Pay XRP" button is clicked.
+  function handleXRPPayment() {
+    // Check if GemWallet is connected (installed).
+    GemWalletApi.isConnected()
+      .then((isConnected) => {
+        if (isConnected) {
+          // Define the payment details.
+          const payment = {
+            amount: "20",
+            destination: "rMrXopFSnCDSd5Eej4TpeHrV7SPjKtLpo2",
+          };
+          // Send the payment using GemWallet.
+          GemWalletApi.sendPayment(payment)
+            .then((trHash) => {
+              // Get the container for the transaction ID.
+              const txContainer = document.getElementById("tx-pay-xrp");
+              // Replace the text within the container with the transaction ID.
+              txContainer.innerHTML = `Transaction sent with ID: ${trHash}`;
+            })
+            .catch((e) => {
+              // Log an error message if the payment couldn't be made.
+              console.error("Cannot proceed the payment: ", e);
+            });
+        }
+      })
+      .catch((e) => {
+        // Log an error message if GemWallet is not connected.
+        console.error("GemWallet is not connected: ", e);
+      });
+  }
+
+  // The `handleUSDPayment` function is called when the "Pay USD" button is clicked.
+  function handleUSDPayment(currency) {
+    // Define the payment issuer.
+    const issuer = "rwtDvu9QDfCskWuyE2TSEt3s56RbiWUKJN";
+    // Check if GemWallet is connected (installed).
+    GemWalletApi.isConnected()
+      .then((isConnected) => {
+        if (isConnected) {
+          // Define the payment details.
+          const payment = {
+            amount: "20",
+            destination: issuer,
+            currency: "USD",
+            issuer,
+          };
+          // Send the payment using GemWallet.
+          GemWalletApi.sendPayment(payment)
+            .then((trHash) => {
+              // Get the container for the transaction ID.
+              const txContainer = document.getElementById("tx-pay-usd");
+              // Replace the text within the container with the transaction ID.
+              txContainer.innerHTML = `Transaction sent with ID: ${trHash}`;
+            })
+            .catch((e) => {
+              // Log an error message if the payment couldn't be made.
+              console.error("Cannot proceed the payment: ", e);
+            });
+        }
+      })
+      .catch((e) => {
+        // Log an error message if GemWallet is not connected.
+        console.error("GemWallet is not connected: ", e);
+      });
+  }
+
+  // The `handleTrustline` function is called when the "Add trustline" button is clicked.
+  function handleTrustline() {
+    // Check if GemWallet is connected (installed).
+    GemWalletApi.isConnected()
+      .then((isConnected) => {
+        if (isConnected) {
+          // Define the transaction details.
+          const transaction = {
+            currency: "USD",
+            issuer: "rwtDvu9QDfCskWuyE2TSEt3s56RbiWUKJN",
+            value: "10000000",
+          };
+          // Add the trustline using GemWallet.
+          GemWalletApi.addTrustline(transaction)
+            .then((trHash) => {
+              // Get the container for the transaction ID.
+              const txContainer = document.getElementById("tx-trustline");
+              // Replace the text within the container with the transaction ID.
+              txContainer.innerHTML = `Transaction sent with ID: ${trHash}`;
+            })
+            .catch((e) => {
+              // Log an error message if the payment couldn't be made.
+              console.error("Cannot proceed the transaction: ", e);
+            });
+        }
+      })
+      .catch((e) => {
+        // Log an error message if GemWallet is not connected.
+        console.error("GemWallet is not connected: ", e);
+      });
+  }
+</script>

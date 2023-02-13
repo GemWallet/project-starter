@@ -1,0 +1,14 @@
+{
+  "name": "gemwallet-html-starter",
+  "version": "1.0.0",
+  "description": "This project is a simple example of how to use the [GemWallet API](https://gemwallet.app/docs/api/using-gemwallet-in-browser) to make XRP and USD payments, and add a trustline.",
+  "main": "index.js",
+  "scripts": {
+    "start": "serve ."
+  },
+  "author": "Florian Bouron",
+  "license": "ISC",
+  "dependencies": {
+    "serve": "^14.2.0"
+  }
+}
