@@ -94,7 +94,7 @@ export function Checkout() {
       if (isInstalled) {
         setIsGemInstalled(true);
         const transaction: SendPaymentRequest = {
-          amount: "26200000",
+          amount: subtotal * 1000000,
           destination: "rNvFCZXpDtGeQ3bVas95wGLN6N2stGmA9o",
         };
         sendPayment(transaction)
