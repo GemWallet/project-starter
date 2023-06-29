@@ -294,7 +294,7 @@ export function Checkout() {
         <Modal
           icon="success"
           title="Payment successful"
-          description="Your payment of 26.20XRP has been successful"
+          description={`Your payment of ${subtotal} XRP has been successful`}
           button="Close"
         />
       )}
