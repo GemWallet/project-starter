@@ -1,6 +1,6 @@
 # react-trustline-store
 
-This repository demonstrates a token-gated ecommerce store built with React and Vite.js, integrated with GemWallet extension.
+This repository demonstrates an ecommerce using the XRPL to pay in USD built with React and Vite.js, integrated with GemWallet extension.
 
 GemWallet is a Chrome extension that provides a secure and convenient way to interact with the XRPL. You can download the GemWallet extension from the Chrome Web Store: [GemWallet Extension](https://chrome.google.com/webstore/detail/gemwallet/egebedonbdapoieedfcfkofloclfghab?hl=fr&authuser=2)
 
