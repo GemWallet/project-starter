@@ -1,12 +1,7 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import {
-  SendPaymentRequest,
-  isInstalled,
-  getNFT,
-  sendPayment,
-} from "@gemwallet/api";
+import { SendPaymentRequest, isInstalled, sendPayment } from "@gemwallet/api";
 import { useNavbar } from "../../contexts/NavbarContext";
 import { Modal } from "../Modal";
 import { Error } from "../Error";
@@ -37,66 +32,28 @@ const products = [
   // More products...
 ];
 
-const targetNFTokenID =
-  "000A0BB8958D7E6421CBCA2019E78F79BEB641611EC0F86F0000099B00000000";
-
-const clubPromotion = 0.2;
+const subtotal = products.reduce((sum, product) => sum + product.price, 0);
 
 export function Checkout() {
   const { isOpen, setIsOpen } = useNavbar();
   const [isGemInstalled, setIsGemInstalled] = useState<boolean>(true);
-  const [isInClub, setIsInClub] = useState<boolean>(false);
-  const [errorGetNFT, setErrorGetNFT] = useState<string | undefined>();
   const [paymentStatus, setPaymentStatus] = useState<
     "response" | "reject" | "error"
   >();
-  const [subtotal, setSubtotal] = useState<number>(
-    products.reduce((sum, product) => sum + product.price, 0)
-  );
-
-  useEffect(() => {
-    const tempTotal = products.reduce((sum, product) => sum + product.price, 0);
-    if (isInClub) {
-      setSubtotal(tempTotal - tempTotal * clubPromotion);
-    } else {
-      setSubtotal(tempTotal);
-    }
-  }, [isInClub]);
-
-  const handleCheckClub = () => {
-    isInstalled().then(({ result: { isInstalled } }) => {
-      if (isInstalled) {
-        setIsGemInstalled(true);
-        getNFT()
-          .then((response) => {
-            setErrorGetNFT(undefined);
-            if (
-              response.result?.account_nfts.some(
-                (nft) => nft.NFTokenID === targetNFTokenID
-              )
-            ) {
-              setIsInClub(true);
-            } else {
-              setIsInClub(false);
-            }
-          })
-          .catch((e) => {
-            setErrorGetNFT(e);
-          });
-      } else {
-        setIsGemInstalled(false);
-      }
-    });
-  };
 
   const handlePayment = () => {
     isInstalled().then(({ result: { isInstalled } }) => {
       if (isInstalled) {
         setIsGemInstalled(true);
         const transaction: SendPaymentRequest = {
-          amount: subtotal * 1000000,
-          destination: "rNvFCZXpDtGeQ3bVas95wGLN6N2stGmA9o",
+          amount: {
+            currency: "USD",
+            issuer: "rwtDvu9QDfCskWuyE2TSEt3s56RbiWUKJN",
+            value: `${subtotal}`,
+          },
+          destination: "rwtDvu9QDfCskWuyE2TSEt3s56RbiWUKJN",
         };
+
         sendPayment(transaction)
           .then(({ type }) => {
             setPaymentStatus(type);
@@ -185,14 +142,9 @@ export function Checkout() {
                                           {product.name}{" "}
                                         </a>
                                       </h3>
-                                      <p className="ml-4">{`${
-                                        isInClub
-                                          ? (
-                                              product.price -
-                                              product.price * clubPromotion
-                                            ).toFixed(2)
-                                          : product.price.toFixed(2)
-                                      }USD`}</p>
+                                      <p className="ml-4">{`${product.price.toFixed(
+                                        2
+                                      )}USD`}</p>
                                     </div>
                                     <p className="mt-1 text-sm text-gray-500">
                                       {product.color}
@@ -212,21 +164,6 @@ export function Checkout() {
                     </div>
 
                     <div className="border-t border-gray-200 py-6 px-4 sm:px-6">
-                      <div className="flex justify-center">
-                        {isInClub ? (
-                          <p className="mt-0.5 text-sm text-indigo-500">
-                            Welcome back to the club, you now have 20% off on
-                            all the articles (prices have been refreshed)
-                          </p>
-                        ) : (
-                          <button
-                            onClick={handleCheckClub}
-                            className="mb-6 bg-indigo-600 border border-transparent rounded-md py-2 px-6 flex items-center justify-center text-sm text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                          >
-                            🚀 Check if I have a club promotion 🚀
-                          </button>
-                        )}
-                      </div>
                       <div className="flex justify-between text-base font-medium text-gray-900">
                         <p>Subtotal</p>
                         <p>{`${subtotal.toFixed(2)}USD`}</p>
@@ -279,14 +216,6 @@ export function Checkout() {
           icon="fail"
           title="Payment failed"
           description="Your payment failed to process"
-          button="Close"
-        />
-      )}
-      {errorGetNFT && (
-        <Modal
-          icon="fail"
-          title="Something went wrong while getting the NFTs, please try again later"
-          description={errorGetNFT}
           button="Close"
         />
       )}
