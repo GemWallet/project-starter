@@ -4,7 +4,7 @@ import { RadioGroup } from '@headlessui/react';
 
 const product = {
   name: 'Basic Tee 6-Pack',
-  price: '60XRP',
+  price: '60USD',
   images: [
     {
       src: 'img/product-page-02-secondary-product-shot.jpeg',

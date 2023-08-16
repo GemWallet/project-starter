@@ -192,7 +192,7 @@ export function Checkout() {
                                               product.price * clubPromotion
                                             ).toFixed(2)
                                           : product.price.toFixed(2)
-                                      }XRP`}</p>
+                                      }USD`}</p>
                                     </div>
                                     <p className="mt-1 text-sm text-gray-500">
                                       {product.color}
@@ -229,7 +229,7 @@ export function Checkout() {
                       </div>
                       <div className="flex justify-between text-base font-medium text-gray-900">
                         <p>Subtotal</p>
-                        <p>{`${subtotal.toFixed(2)}XRP`}</p>
+                        <p>{`${subtotal.toFixed(2)}USD`}</p>
                       </div>
                       <p className="mt-0.5 text-sm text-gray-500">
                         We accept payments with{" "}
@@ -294,7 +294,7 @@ export function Checkout() {
         <Modal
           icon="success"
           title="Payment successful"
-          description={`Your payment of ${subtotal} XRP has been successful`}
+          description={`Your payment of ${subtotal} USD has been successful`}
           button="Close"
         />
       )}
